@@ -1,7 +1,7 @@
 const pool = require('./connectdb.js');
 
 const getCustomers = (req, res) => {
-	pool.query('SELECT * FROM customers ORDER BY id ASC', (error, results) => {
+	pool.query('SELECT * FROM customer ORDER BY id ASC', (error, results) => {
 		if (error) {
 			throw error;
 		}
@@ -11,7 +11,7 @@ const getCustomers = (req, res) => {
 
 const getCustomerById = (req, res) => {
 	const id = parseInt(req.params.id);
-	pool.query('SELECT * FROM customers WHERE id = $1', [id], (error, results) => {
+	pool.query('SELECT * FROM customer WHERE id = $1', [id], (error, results) => {
 		if (error) {
 			throw error;
 		}
@@ -21,7 +21,7 @@ const getCustomerById = (req, res) => {
 
 const deleteCustomer = (req, res) => {
 	const id = parseInt(req.params.id);
-	pool.query('DELETE FROM customers WHERE id = $1', [id], (error, results) => {
+	pool.query('DELETE FROM customer WHERE id = $1', [id], (error, results) => {
 		if (error) {
 			throw error;
 		}
@@ -30,10 +30,10 @@ const deleteCustomer = (req, res) => {
 }
 
 const createCustomer = (req, res) => {
-	const { name, address, email } = req.body;
+	const { name, email, password } = req.body;
 
 
-	pool.query('INSERT INTO customers (name, address, email) VALUES ($1, $2, $3)', [name, address, email], (error, results) => {
+	pool.query('INSERT INTO customer (name, email, password) VALUES ($1, $2, $3)', [name, email, password], (error, results) => {
 		if (error) {
 			throw error;
 		}
@@ -43,9 +43,9 @@ const createCustomer = (req, res) => {
 
 const updateCustomer = (req, res) => {
 	const id = parseInt(req.params.id);
-	const { name, address, email } = req.body;
+	const { name, email, password } = req.body;
 
-	pool.query('UPDATE customers SET name = $1, address = $2, email = $3 WHERE id = $4', [name, address, email, id], (error, results) => {
+	pool.query('UPDATE customer SET name = $1, address = $2, email = $3 WHERE id = $4', [name, email, passwordl, id], (error, results) => {
 		if (error) {
 			throw error;
 		}

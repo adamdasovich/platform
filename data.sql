@@ -1,34 +1,44 @@
-CREATE TABLE "customers" (
-  id SERIAL PRIMARY KEY,
-  name varchar(40),
-  address varchar(50),
-  email varchar(50)
+CREATE TABLE category (
+    id SERIAL PRIMARY KEY,
+    cat_name VARCHAR(45),
+    cat_desc VARCHAR(200),
+    Type VARCHAR(20)
 );
 
-CREATE TABLE "products" (
-  id SERIAL PRIMARY KEY,
-  name varchar(40),
-  description varchar(200),
-  price money,
-  customer_id integer
+CREATE TABLE customer (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(40),
+    email VARCHAR(50),
+    password VARCHAR(50)
 );
 
-CREATE TABLE "carts" (
-  id SERIAL PRIMARY KEY,
-  customer_id integer,
-  order_id integer,
-  create_date date,
-  CONSTRAINT "FK_carts.customer_id"
-    FOREIGN KEY ("customer_id")
-      REFERENCES "customers"("id")
+CREATE TABLE product (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(40),
+    description VARCHAR(200),
+    price FLOAT,
+    category_id INTEGER REFERENCES category (id)
 );
 
-CREATE TABLE "orders" (
-  id SERIAL PRIMARY KEY,
-  cart_id integer,
-  order_date date,
-  total_amount money
+CREATE TABLE cart (
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER REFERENCES customer (id),
+    cart_status INTEGER,
+    delivery_date TIMESTAMP
 );
 
-CREATE INDEX "Key" ON  "orders" ("order_date", "total_amount");
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    order_date TIMESTAMP,
+    order_total FLOAT,
+    customer_id INTEGER REFERENCES customer (id),
+    shipping_date TIMESTAMP,
+    is_delivered VARCHAR(20)
+);
 
+-- Connecting cart and product tables using a many-to-many relationship
+CREATE TABLE cart_product (
+    cart_id INTEGER REFERENCES cart (id),
+    product_id INTEGER REFERENCES product (id),
+    PRIMARY KEY (cart_id, product_id)
+);
