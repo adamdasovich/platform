@@ -9,11 +9,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "dependencies": {   
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "node-postgres": "^0.6.2",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "pg": "^8.11.0"
+    "pg": "^8.11.0"   
   }
 }
