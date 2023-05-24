@@ -7,6 +7,7 @@ const getProductById = (req, res) => {
 			throw error;
 		}
 		res.status(200).json(results.rows);
+		console.log(results.rows)
 	})
 }
 
@@ -21,8 +22,8 @@ const getProductByCat = (req, res) => {
 }
 
 const createProduct = (req, res) => {
-	const { name, description, price, category_id } = req.body;
-	pool.query('INSERT INTO product (name, description, price, category_id) VALUES ($1, $2, $3, $4)', [name, description, price, category_id], (error, results) => {
+	const { name, description, price } = req.body;
+	pool.query('INSERT INTO product (name, description, price) VALUES ($1, $2, $3)', [name, description, price], (error, results) => {
 		if (error) {
 			throw error;
 		}

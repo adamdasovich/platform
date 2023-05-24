@@ -1,11 +1,5 @@
 const pool = require('./connectdb.js');
 
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-
-app.use(passport.initialize());
-app.use(passport.session());
-
 const createCustomer = (req, res) => {
 	const { name, email, password } = req.body;
 

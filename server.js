@@ -7,10 +7,13 @@ const authRoutes = require('./routes/auth.js');
 const cartRoutes = require('./routes/cart.js');
 const orderRoutes = require('./routes/orders.js');
 const checkoutRoutes = require('./routes/checkout.js');
+const cors = require('cors');
+
 
 const app = express();
-
+app.use(cors());
 app.use(express.json({ extended: true }));
+
 
 app.get('/', (req, res) => res.send('API Running'));
 app.use('/api/customers', customerRoutes);
