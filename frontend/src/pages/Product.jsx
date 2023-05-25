@@ -109,10 +109,14 @@ const Button = styled.button
 	`
 const Add = styled.span
 ` margin-left: 10px;
+&:hover {
+    cursor: pointer;
+  }
 `
 
 const Remove = styled.span
 ` margin-right: 10px;
+    cursor: pointer;  
 `
 
 const FilterSizeOption = styled.option

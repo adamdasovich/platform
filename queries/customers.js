@@ -11,7 +11,23 @@ const getCustomers = (req, res) => {
 
 const getCustomerById = (req, res) => {
 	const id = parseInt(req.params.id);
+
+	if (isNaN(id)) {
+		res.status(400).json({ error: 'Invalid customer ID' });
+		return;
+	}
+
 	pool.query('SELECT * FROM customer WHERE id = $1', [id], (error, results) => {
+		if (error) {
+			throw error;
+		}
+		res.status(200).json(results.rows);
+	});
+};
+
+const getCustomerByEmail = (req, res) => {
+	const email = req.params.email;
+	pool.query('SELECT * FROM customer WHERE email = $1', [email], (error, results) => {
 		if (error) {
 			throw error;
 		}
@@ -58,5 +74,6 @@ module.exports = {
 	getCustomerById,
 	deleteCustomer,
 	createCustomer,
-	updateCustomer
+	updateCustomer,
+	getCustomerByEmail
 }

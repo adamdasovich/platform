@@ -1,6 +1,10 @@
 import styled from "styled-components"
 
-import { useState,useEffect } from "react"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+
+import { axiosIntance } from '../config';
+import { useEffect } from "react";
 
 const Container = styled.div`
   width: 100vw;
@@ -71,36 +75,86 @@ const Button = styled.button`
 `
 
 const Register = () => {
-	const [username, setUsername] = useState("")
-	const [email, setEmail] = useState("")
-	const [password, setPassword] = useState("")
+	const [formData, setFormData] = useState({
+		username: '',
+		email: '',
+		password: '',
+		confirm_password: ''
+	})
+	const [checkEmail, setCheckEmail] = useState(false)
+	
+	const navigate = useNavigate()
 
 	useEffect(() => {
-		return () => {
-			setUsername("")
-			setEmail("")
-			setPassword("")
+		const checkUser = async () => {
+			try {
+				const res = await axiosIntance.get(`customers/email/${formData.email}`)
+				const checkEmail = res.data[0].email
+				setCheckEmail(checkEmail)				
+			} catch (error) {
+				console.log(error)
+			}
 		}
-	}, [])
-	
+		checkUser()
+		if (checkEmail) {
+			alert('Email already exists')
+			navigate('/login')
+		}
+	}, [formData.email, checkEmail, navigate])
 
-	const handleSubmit = (e) => {	
+	const submitHandler = async (e) => {	
 		e.preventDefault()
-		setUsername("")
-		setEmail("")
-		setPassword("")
+		const { name, email, password, confirm_password } = formData
+		if (name && email && password && (password === confirm_password)) {
+			navigate('/')
+		} else if (password !== confirm_password) {
+			alert('Password does not match')
+			return
+		} else {
+			alert('Please fill in all the fields')
+			return			
+		}
+		try {
+			const res = await axiosIntance.post('/auth/register', {
+				name,
+				email,
+				password
+			})
+			console.log(res)
+		} catch (error) {
+			console.log(error)
+		}		
 	}
-	console.log(username, email, password)
 
   return (	
 	<Container>
 		<Wrapper>
 			<Title>CREATE AN ACCOUNT</Title>
-			<Form>
-				<Input placeholder="username" />
-				<Input placeholder="email" />
-				<Input placeholder="password" />
-				<Input placeholder="confirm password" />
+			<Form onSubmit={submitHandler}>
+				<Input 
+					placeholder="name"
+					type="text"
+					onChange={e => setFormData({...formData, name: e.target.value})} 
+					required
+				/>
+				<Input 
+					placeholder="email" 
+					type='email'
+					onChange={e => setFormData({...formData, email: e.target.value})}
+					required
+				/>
+				<Input 
+					placeholder="password" 
+					type='password'
+					onChange={e => setFormData({...formData, password: e.target.value})}
+					required 
+				/>
+				<Input 
+					placeholder="confirm password"
+					type='confirm_password'
+					onChange={e => setFormData({...formData, confirm_password: e.target.value})}
+					required
+				/>
 				<Agreement>
 					<Checkbox type="checkbox" />
 					<Desc>
@@ -108,11 +162,12 @@ const Register = () => {
 						data in accordance with the <b>PRIVACY POLICY</b>
 					</Desc>
 				</Agreement>
-				<Button onClick={(e)=>handleSubmit} >CREATE</Button>
+				<Button type='submit' >CREATE</Button>
 			</Form>
 		</Wrapper>
 	</Container>
   )
 }
+
 
 export default Register

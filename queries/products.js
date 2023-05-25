@@ -22,14 +22,16 @@ const getProductByCat = (req, res) => {
 }
 
 const createProduct = (req, res) => {
-	const { name, description, price } = req.body;
-	pool.query('INSERT INTO product (name, description, price) VALUES ($1, $2, $3)', [name, description, price], (error, results) => {
+	const { name, description, price, category_id } = req.body;
+	pool.query('INSERT INTO product (name, description, price, category_id) VALUES ($1, $2, $3, $4) returning*', [name, description, price, category_id], (error, results) => {
 		if (error) {
 			throw error;
 		}
-		res.status(201).send(`Product added with ID: ${results.insertId}`);
+		res.status(201).send(`Product added to database with id: ${results.rows[0].id}.`);
+		console.log(results.rows[0])
 	})
 }
+
 
 module.exports = {
 	getProductById,

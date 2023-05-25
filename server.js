@@ -13,6 +13,7 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 app.use(express.json({ extended: true }));
+app.use(express.static('build'));
 
 
 app.get('/', (req, res) => res.send('API Running'));
